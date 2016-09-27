@@ -31,24 +31,33 @@ def _main_():
 	while response != "exit":
 		i = i + 1 
 		if i == 1:
-			item_price = int(float(input("Enter the item's price:	")) * 100)
-			customers_order = []
-			customers_order.append(item_price) 
-		elif i > 1:
-			response = input("Enter the items's price (enter 'exit' to total and complete order)	:")
-			if response == "exit":
-					break
-			else:
-				item_price = int(float(response)*100)
+			try:
+				item_price = int(float(raw_input("Enter the first " +
+				"item's price:	")) * 100)
+				customers_order = []
 				customers_order.append(item_price) 
-		
+			except ValueError:
+				_inputError_()
+		elif i > 1:
+			response = raw_input("Enter the next items's price (enter " +
+								 "'exit' to total and complete order)	:")
+			try:
+				if response == "exit":
+						break
+				else:
+					item_price = int(float(response)*100)
+					customers_order.append(item_price) 
+			except ValueError:
+				_inputError_()
+
 	
 	order_total = float(sum(customers_order) * 1.07)							
-	print ("Customer's order total is: $" + str(format(order_total/100,'.2f')))
+	print ("Customer's order total is: $" + str(format(order_total
+			/100,'.2f')))
 	
 		
 	# allow the user to enter the price; force them to be ints for ease sake 	
-	money_in = float(input("Amount of money recieved from customer:	")) * 100	
+	money_in = float(raw_input("Amount of money recieved from customer:	")) * 100	
 	change = money_in - order_total 
 	
 	# would like to add the functionality to ensure money received is > money owed 
@@ -64,14 +73,15 @@ def _main_():
 	nbr_p = int(remaining_n // penny)			# number of pennies needed 
 
 	# Print the results out to the user 
-	print ("Looks like you owe the customer $%s. Easiest change would be: %s quarters,  %s dimes, %s nickels, and %s pennies." % (format(float(change)/100,'.2f'),nbr_q,nbr_d,nbr_n,nbr_p))
+	# Figure out how to have this line split to multiple; limit lines to 80 char wide 
+	print ("Looks like you owe the customer $%s. Easiest change would be: %s quarters,  %s dimes, %s nickels,and %s pennies." % (format(float(change)/100,'.2f'),nbr_q,nbr_d,nbr_n,nbr_p))
 
 	# Call on the _Again_() function; allow the user to loop and start a new order or quit 
 	_Again_()
 
 
 def _Again_():
-	decision = input("Would you like to begin another order (y/n):  ")
+	decision = raw_input("Would you like to begin another order (y/n):  ")
 	decision = decision.strip()
 	if decision == "y":
 		_main_()
@@ -83,6 +93,11 @@ def _Again_():
 		_Again_()
 		exit 
 	
- 
+def _inputError_():
+	print "Oops! I didn't catch that; Rebooting..."
+	time.sleep(0.25)
+	_main_()
+		
+	
 
 _main_()
