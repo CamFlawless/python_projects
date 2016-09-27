@@ -64,13 +64,13 @@ def _main_():
 	# need help in figuring out the logic for reiterating when we have an error 
 
 	# Determing coin makeup for our change 
-	nbr_q = int(change // quarter)  			# number of quarters to return (thx floor division!)
+	nbr_q = int(change // quarter)  		# number of quarters to return (thx floor division!)
 	remaining_q = change - nbr_q*quarter 		# compute non-quarter change remaining 
-	nbr_d = int(remaining_q // dime)			# floor division on remaining change to determine dime count 
+	nbr_d = int(remaining_q // dime)		# floor division on remaining change to determine dime count 
 	remaining_d = remaining_q - nbr_d*dime 		# change remaining once dimes are used 
-	nbr_n = int(remaining_d // nickel) 			# floor division to determine nickel count 
+	nbr_n = int(remaining_d // nickel) 		# floor division to determine nickel count 
 	remaining_n = remaining_d - nbr_n*nickel 	# change remaining (pennies)
-	nbr_p = int(remaining_n // penny)			# number of pennies needed 
+	nbr_p = int(remaining_n // penny)		# number of pennies needed 
 
 	# Print the results out to the user 
 	# Figure out how to have this line split to multiple; limit lines to 80 char wide 
