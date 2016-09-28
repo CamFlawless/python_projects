@@ -21,7 +21,7 @@
 
 
 
-### Modifications
+### Modifications and/or Extensions 
 	# Change initial dialogue on user selected replay
 	# Add smack talk based on previous game result 
 	# Add difficulty selection to first prompt (# of guesses given) 
@@ -47,7 +47,9 @@ def _main_():
 			guess, I will let you know if you should guess higher or lower (unless
 			you're a genius and happen to guess the same!). 
 			
-			Good luck, fr1end. '''  
+			Good luck, fr1end. 
+			
+			'''  
 			
 		higher_lower(i)
 		status = _Again_()
