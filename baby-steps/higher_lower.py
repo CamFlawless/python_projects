@@ -22,6 +22,7 @@
 
 
 ### Modifications and/or Extensions 
+	# Enforce strict type on user submitted guesses
 	# Change initial dialogue on user selected replay
 	# Add smack talk based on previous game result 
 	# Add difficulty selection to first prompt (# of guesses given) 
@@ -69,7 +70,7 @@ def higher_lower(i):
 		game_mode()
 
 def game_mode():
-	cpu_guess = random.randint(1,1)
+	cpu_guess = random.randint(1,100)
 	user_guess = 0
 	i = 0 
 
