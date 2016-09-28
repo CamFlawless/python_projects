@@ -1,4 +1,5 @@
 
+
 #BASIC GOAL 
 	#Create a simple game where the computer randomly selects a number 
 	#between 1 and 100 and the user has to guess what the number is. 
@@ -14,9 +15,6 @@
 	#-At the end of the game, allow the user to decide if they want to 
 	#play again (without having to restart the program).
 
-
-
-
 ### Modifications and/or Extensions 
   # Enforce strict type on user submitted guesses
   # Change initial dialogue on user selected replay 
@@ -25,8 +23,7 @@
 	# Perhaps store them in an array and select an element at random
 	# Something like: smack_talk = smack_talk_array[randint(0,len(smack_talk_array))]
   # Add difficulty selection to first prompt (# of guesses given)
-    # - Added function for difficulty selection _LevelSelection_()
-    # - Need to call on it during _main_() and go from there 
+    # - Add in the ability for the user to change difficulty between games 
   # Keep a historical record of win/loss (think on how to store this data)
   # Add in high score functionality - is this the fastest time during this session?
 
@@ -37,7 +34,7 @@ import time 	# for sleep function
 
 def _main_():
 	start_time = time.time()
-	print (start_time)
+	difficulty = _LevelSelection_() 
 	i = 0 
 	status = True
 	
@@ -47,17 +44,15 @@ def _main_():
 			print ( ''' 
 			
 			Welcome to the Higher/Lower Game!
-
 			The game is simple: I will guess a random number between the value of 
 			1 and 100. Your job is to figure out my guess. Each time you make a 
 			guess, I will let you know if you should guess higher or lower (unless
 			you're a genius and happen to guess the same!). 
-
 			Good luck, fr1end. 
 			
 			''' )
 			
-		higher_lower(i)
+		higher_lower(i,difficulty)
 		status = _Again_()
 
 	# Exit interface; remind the player how many games they played and 
@@ -71,55 +66,70 @@ def _main_():
 	time.sleep(0.3)		
 	exit 
 
-def higher_lower(i):
+def higher_lower(i,difficulty):
 	if i == 1:
 		print ("Let's see if it's true what they say about beginner's luck.")
-		game_mode()
+		game_mode(difficulty)
 	elif i > 1:
 		print ("Let's try this again")
-		game_mode()
+		game_mode(difficulty)
 
-def game_mode():
+def game_mode(difficulty):
+	
+	turn_count = 0 
+	
+	turn_count_list = [0,20,10,5]
+	turn_count = turn_count_list[difficulty]
+		
 	cpu_guess = random.randint(1,100)
 	user_guess = 0
 	i = 0
-
 	start_time = time.time()
-
-	while user_guess != cpu_guess:
-		user_guess = int(input("What is your guess, friend?	>	"))
-		i = i + 1 
-		guess_diff = user_guess - cpu_guess 
-		if guess_diff > 0:
-			print ("Your guess is a bit high. Try something lower")
-		elif guess_diff < 0:
-			print ("Your guess is a bit low. Try something higher")
 	
+	while i < turn_count + 1 or user_guess != cpu_guess:
+		i = i + 1
+		if i <= turn_count:
+			user_guess = int(input("What is your guess, friend?	>	"))
+			guess_diff = user_guess - cpu_guess
+			if guess_diff > 0:
+				print ("Your guess is a bit high. Try something lower")
+			elif guess_diff < 0:
+				print ("Your guess is a bit low. Try something higher")
+			else:
+				break 
+		else:
+			break 
+
 	end_time = time.time()
 	time_played = str(format(end_time - start_time,'.2f')) # will this work?
-	print ("Congrats! It took you %s seconds to guess the right number of %s in only %s guesses" % (time_played,cpu_guess,i))
-	
+	if user_guess == cpu_guess:
+		print ("Congrats! It took you %s seconds to guess the right number of %s in only %s guesses" % (time_played,cpu_guess,i))
+		time.sleep(0.3) 
+	else:
+		print ("You are not match against me, fr1end.")
+		time.sleep(0.3)
+		
 def _Again_():
-	status = ""
+	user_status = ""
 	response = input("Would you like to play again?	(y/n)	>	")
 	response = response.strip()
 	if response != "y" and response != "n":
 		print ("Please enter a valid reponse: y for yes or n for no")
 		_Again_()
 	elif response == "y":
-		status = True
+		user_status = True
 	elif response == "n":
 		print ("Hope you had fun, friend!")
-		status = False
+		user_status = False
 
-	return status
+	return user_status
 	exit
 	
 def _LevelSelection_():	
 	choice = input("Please enter a difficulty value: 1 for easy, 2 for normal, or 3 for challenge mode   >  ")
 	try:
 		if int(choice) in (1,2,3):
-			print (choice)
+			return int(choice)
 	except ValueError:
 		print ("Oops! I didn't get that, please enter a valid selection")
 		_LevelSelection_()
