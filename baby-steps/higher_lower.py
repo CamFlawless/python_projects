@@ -35,6 +35,9 @@ import time 	# for sleep function
 def _main_():
 	start_time = time.time()
 	difficulty = _LevelSelection_() 
+	# this is an empty array/list where I will host the game history 
+	# retun a 0 if the user lost; 1 if the user wins
+	game_history = []
 	i = 0 
 	status = True
 	
