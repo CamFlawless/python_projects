@@ -93,7 +93,8 @@ def higher_lower(i,difficulty):
 	if i == 1 and difficulty == 3:
 		print ("It looks like someone is confident, let's see about that.")
 		print ("Let's see if it's true what they say about beginner's luck.")
-	elif i == 1 and difficulty != 3:
+	elif i == 1 and difficulty not in (2,3):
+		print ("Somebody's not feeling so confident, ehh?")
 		print ("Let's see if it's true what they say about beginner's luck.")
 	elif i > 1:
 		print ("Let's try this again")
