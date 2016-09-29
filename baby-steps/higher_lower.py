@@ -17,6 +17,7 @@
 
 ### Modifications and/or Extensions 
   # Enforce strict type on user submitted guesses
+    # -- Includeqd as of 9/29/2016 
   # Change initial dialogue on user selected replay 
     # -- Included 9/27/2016
   # Add smack talk based on previous game result 
@@ -36,18 +37,15 @@ import time 	# for sleep function as well as time manipulations
 
 def _main_():
 	print ( ''' 
-
 	Welcome to the Higher/Lower Game!
 	The game is simple: I will guess a random number between the value of 
 	1 and 100. Your job is to figure out my guess. Each time you make a 
 	guess, I will let you know if you should guess higher or lower (unless
 	you're a genius and happen to guess the same!). 
 	Good luck, fr1end. 
-
 	''' )
-
-	start_time = time.time()
 	
+	start_time = time.time()
 	difficulty = _LevelSelection_() 
 
 	# this is an empty array/list where I will host the game history 
@@ -59,12 +57,9 @@ def _main_():
 	
 	while status != False:
 		i = i + 1 
-		# moving the line below to within this loop, we allow the user 
-		# to change the difficulty between games
-		# ideally - we would prompt them with a y or n choice to switch 
-		# between rather than always asking 
 		higher_lower(i,difficulty)
 		game_history.append(game_mode(difficulty))
+		print (SmackTalk(game_history[len(game_history) - 1]))
 		status = _Again_()
 		if status != False:
 			change_diff = _ChangeLevel_()
@@ -77,7 +72,7 @@ def _main_():
 	win_count = sum(game_history)
 	end_time = time.time()
 	time_played = str(format(end_time - start_time, '.2f'))
-	print ("Yopu played %s games of Higher/Lower in %s seconds and won %s of them" % (i,time_played,win_count))
+	print ("You played %s games of Higher/Lower in %s seconds and won %s of them" % (i,time_played,win_count))
 	print ("Pleasure playing with you, fr1end.")
 	time.sleep(0.25)
 	print ("Shutting Down...")
@@ -107,16 +102,20 @@ def game_mode(difficulty):
 	
 	# Add in remaining turn count to be printed with each user guess
 	# A way to have a message on the user's last available turn?
+	# Is there a way to re-do the turn on invalid number entry rather 
+	# than restarting the entire game? 
+	
 	turn_count = 0 
 	
 	turn_count_list = [0,20,10,5]
 	turn_count = turn_count_list[difficulty]
 		
-	cpu_guess = random.randint(1,1)
+	cpu_guess = random.randint(1,100)
 	user_guess = 0
 	i = 0
 	start_time = time.time()
 	
+		
 	while i < turn_count + 1 or user_guess != cpu_guess:
 		i = i + 1
 		if i <= turn_count:
@@ -136,6 +135,7 @@ def game_mode(difficulty):
 				break 
 		else:
 			break 
+
 
 	end_time = time.time()
 	time_played = str(format(end_time - start_time,'.2f')) # will this work?
@@ -174,6 +174,23 @@ def _ChangeLevel_():
 		return True
 	elif response == "n":
 		return False 
-	
+
+def SmackTalk(result):
+	smack_w = [
+		"Better luck next time, scrub",
+		"2 EZ. GG n00b",
+		"Don't quit your day job, kid", 
+		"Maybe this game isn't for you..."
+		]
+	smack_l = [
+		"You got lucky is all...",
+		"I'll get you next time, my man",
+		"I will not let this bring me down", 
+		"Watch out! Einstein is on the loose"
+		]
+	if result == 0:
+		return (random.choice(smack_w))
+	elif result == 1:
+		return (random.choice(smack_l))
 	
 _main_()
