@@ -17,7 +17,7 @@
 
 ### Modifications and/or Extensions 
   # Enforce strict type on user submitted guesses
-    # -- Includeqd as of 9/29/2016 
+    # -- Included as of 9/29/2016 
   # Change initial dialogue on user selected replay 
     # -- Included 9/27/2016
   # Add smack talk based on previous game result 
