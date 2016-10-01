@@ -113,8 +113,8 @@ def _CustomerOrder_():
 		
 
 	# sum the list containing the prices to provide the user with the order total price 
-	order_total = sum(order_prices)	
-	print ("The customer's order total is $%s" % (order_total))
+	order_total = sum(order_prices)	* 1.07
+	print ("The customer's order total is $%s" % str(format(order_total,'.2f')))
 	
 	# call on the _Again_ function to ask the user if they would like to begin another order 
 	_Again_() 
@@ -133,7 +133,7 @@ def _SanityCheck_():
 		return new_order 
 		
 def _RedoOrder_():
-	customer_order = input("Enter the customer's order number(s)	> ")
+	customer_order = input("Please re-enter the customer's order number(s)	> ")
 	try:
 		int(customer_order)
 	except ValueError:
@@ -153,5 +153,8 @@ def _Again_():
 		print ("Shutting Down...")
 		time.sleep(0.5)
 		exit 
-	
+				
+
+
+		
 _main_()
