@@ -35,7 +35,8 @@ def _main_():
 			customers_order = []
 			customers_order.append(item_price) 
 		elif i > 1:
-			response = input("Enter the items's price (enter 'exit' to total and complete order)	:")
+			response = input("Enter the items's price (enter 'exit' to "
+            "total and complete order)	:")
 			if response == "exit":
 					break
 			else:
@@ -55,17 +56,18 @@ def _main_():
 	# need help in figuring out the logic for reiterating when we have an error 
 
 	# Determing coin makeup for our change 
-	nbr_q = int(change // quarter)  			# number of quarters to return (thx floor division!)
-	remaining_q = change - nbr_q*quarter 		# compute non-quarter change remaining 
-	nbr_d = int(remaining_q // dime)			# floor division on remaining change to determine dime count 
-	remaining_d = remaining_q - nbr_d*dime 		# change remaining once dimes are used 
-	nbr_n = int(remaining_d // nickel) 			# floor division to determine nickel count 
-	remaining_n = remaining_d - nbr_n*nickel 	# change remaining (pennies)
-	nbr_p = int(remaining_n // penny)			# number of pennies needed 
+	nbr_q = int(change // quarter)  			
+	remaining_q = change - nbr_q*quarter 		
+	nbr_d = int(remaining_q // dime)			
+	remaining_d = remaining_q - nbr_d*dime 		
+	nbr_n = int(remaining_d // nickel) 			
+	remaining_n = remaining_d - nbr_n*nickel 	
+	nbr_p = int(remaining_n // penny)			
 
 	# Print the results out to the user 
-	# Figure out how to have this line split to multiple; limit lines to 80 char wide 
-	print ("Looks like you owe the customer $%s. Easiest change would be: %s quarters,  %s dimes, %s nickels,and %s pennies." % (format(float(change)/100,'.2f'),nbr_q,nbr_d,nbr_n,nbr_p))
+	print ("Looks like you owe the customer $%s. Easiest change would be: "
+     "%s quarters,  %s dimes, %s nickels,and %s pennies." % 
+     (format(float(change)/100,'.2f'),nbr_q,nbr_d,nbr_n,nbr_p))
 
 	# Call on the _Again_() function; allow the user to loop and start a new order or quit 
 	_Again_()
