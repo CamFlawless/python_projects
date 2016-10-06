@@ -36,6 +36,10 @@
    #~it would be easier to store everything in lists and/or dicts 
    #~and call/print them from there; rather than assigning to own vars
    
+   #~Determine how to handle the event when the user inputs an incorrect value 
+   #~ for their coin weight(s) 
+   
+   
 ''' 
 
 def _main_():
@@ -101,12 +105,21 @@ def _user_input(units):
         
     total_value = 0 
     for i in user_coin_value:
-        total_value = total_value + user_coin_value[i] 
+        total_value = total_value + user_coin_value[i]
+      
+    # now that everything is computed, lets output the results to the user      
+    print ('\n \n')     
+    print ("It looks like you have a total of {0} coins, made up of: \n".format
+    (str(int(sum(user_coin_counts.values())))))
+    
+    for i in user_coin_counts:
+        print ('    '+ str(int(user_coin_counts[i])) + ' ' + i)
+    print ('\n') 
+    
+    print ("To make your life easier, you should need:  \n")
+    for i in user_wrapper_counts:
+        print ('    '+ str(int(user_wrapper_counts[i])) + ' ' + i + ' wrappers.')
         
-    print ("It looks like you have a total of {0} coins, made up of:  "
-    " >  ".format(str(int(sum(user_coin_counts.values())))))
-        
-
 # need function to handle when user does not input a int as the weight 
 def _redo_input():
     coins = ['pennies', 'nickels', 'dimes', 'quarters']
