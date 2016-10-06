@@ -45,14 +45,22 @@
 def _main_():
     user_units = _unit_choice()
     _user_input(user_units) 
+    
+    
+    
+    
+    
 
 def _user_input(units):
+	
+	# handling the unit preference chosen by the user 
     unit_sys = ''
     if units == 1:
         unit_sys = "grams"
     elif units == 2:
         unit_sys = "pounds" 
-        
+    
+    # Nested dicts for our coin information     
     coins = {
         'weights': {
             'pennies': 2.500, 
@@ -74,35 +82,40 @@ def _user_input(units):
             }
             }
 
-    for i in coins:
-        for x in coins[i]:
-            print (coins[i][x])
-            
+    # initiating a blank dict that will host the user's coin weights        
     user_coin_weights = {}
     for i in coins['values']:
-        try:
-            user_coin_weights[i] = float(input("Please enter the weight "
-            "of your {0} in {1} > ".format(i,unit_sys)))
-        except ValueError:
-            print ("Uh-Oh")
+		# force the user to input a valid weight; will re-ask if erroneous 
+	    while True:
+		    try:
+			    user_coin_weights[i] = float((input("Please enter the weight "
+			"of your {0} in {1} > ".format(i,unit_sys))))
+			    break
+		    except ValueError or NameError:
+			    print ("That doesn't look like a valid number. Please try again.")
+			    pass
             
     # convert user input pounds to grams if imperial chosen as units        
     if units == 2:
         for i in user_coin_weights:
             user_coin_weights[i] = user_coin_weights[i] * 453.592
-            
+    
+    # empty dict that will host the (approximate) count of the user's coins         
     user_coin_counts = {}
     for i in coins['weights']:
         user_coin_counts[i] = user_coin_weights[i] // coins['weights'][i]
         
+    # empty dict that will host the number of wrappers needed for each coin type    
     user_wrapper_counts = {}
     for i in coins['wrappers']:
         user_wrapper_counts[i] = user_coin_counts[i] // coins['wrappers'][i]
-    
+        
+    # dict to store the values of the coins 
     user_coin_value = {}
     for i in user_coin_counts:
         user_coin_value[i] = user_coin_counts[i] * coins['values'][i]
         
+     # add the value of each coin type to get the user's total money value   
     total_value = 0 
     for i in user_coin_value:
         total_value = total_value + user_coin_value[i]
@@ -113,17 +126,17 @@ def _user_input(units):
     (str(int(sum(user_coin_counts.values())))))
     
     for i in user_coin_counts:
-        print ('    '+ str(int(user_coin_counts[i])) + ' ' + i)
+        print (i + ' | ' + str(int(user_coin_counts[i])) + ' | ' + str(round(
+        user_coin_value[i],2)))
     print ('\n') 
     
     print ("To make your life easier, you should need:  \n")
     for i in user_wrapper_counts:
-        print ('    '+ str(int(user_wrapper_counts[i])) + ' ' + i + ' wrappers.')
-        
-# need function to handle when user does not input a int as the weight 
-def _redo_input():
-    coins = ['pennies', 'nickels', 'dimes', 'quarters']
-    
+        print ('    '+ str(int(user_wrapper_counts[i])) + ' ' + i + 
+        ' wrappers.')
+    print ('\n \n')
+ 
+     
 def _unit_choice():
     print ("What units of weight would you like to use?")
     unit_pref = input("Enter 1 for grams. Enter 2 for pounds  > ")
