@@ -39,21 +39,19 @@
    #~Determine how to handle the event when the user inputs an incorrect value 
    #~ for their coin weight(s) 
    
-   
-''' 
+   #~Think of how I could add all of the user's coin data into a single nested 
+   #~similar to what I have done with the coins dict(s) 
+'''
+
 
 def _main_():
     user_units = _unit_choice()
     _user_input(user_units) 
-    
-    
-    
-    
-    
+  
 
 def _user_input(units):
-	
-	# handling the unit preference chosen by the user 
+    
+    # handling the unit preference chosen by the user 
     unit_sys = ''
     if units == 1:
         unit_sys = "grams"
@@ -82,61 +80,57 @@ def _user_input(units):
             }
             }
 
-    # initiating a blank dict that will host the user's coin weights        
-    user_coin_weights = {}
-    for i in coins['values']:
-		# force the user to input a valid weight; will re-ask if erroneous 
-	    while True:
-		    try:
-			    user_coin_weights[i] = float((input("Please enter the weight "
-			"of your {0} in {1} > ".format(i,unit_sys))))
-			    break
-		    except ValueError or NameError:
-			    print ("That doesn't look like a valid number. Please try again.")
-			    pass
-            
-    # convert user input pounds to grams if imperial chosen as units        
-    if units == 2:
-        for i in user_coin_weights:
-            user_coin_weights[i] = user_coin_weights[i] * 453.592
-    
-    # empty dict that will host the (approximate) count of the user's coins         
-    user_coin_counts = {}
+    user_coins = {}
+    user_coins['weights'] = {}
+    user_coins['counts'] = {} 
+    user_coins['wrappers'] = {}
+    user_coins['values'] = {} 
+        
     for i in coins['weights']:
-        user_coin_counts[i] = user_coin_weights[i] // coins['weights'][i]
-        
-    # empty dict that will host the number of wrappers needed for each coin type    
-    user_wrapper_counts = {}
+        while True:
+            try:
+                user_coins['weights'][i] = float(input('Please enter the '
+                'weight of your {0} in {1}  > '.format(i, unit_sys)))
+                break 
+            except ValueError or NameError:
+                print("That doesn't look like a valid number. Please retry.")
+                pass
+                
+    if units == 2:
+        for i in user_coins['weights']:
+            user_coins['weights'][i] = user_coins['weights'][i] * 453.592
+    
+    for i in coins['weights']:
+        user_coins['counts'][i] = user_coins['weights'][i] // coins['weights'][i]
+    
     for i in coins['wrappers']:
-        user_wrapper_counts[i] = user_coin_counts[i] // coins['wrappers'][i]
-        
-    # dict to store the values of the coins 
-    user_coin_value = {}
-    for i in user_coin_counts:
-        user_coin_value[i] = user_coin_counts[i] * coins['values'][i]
-        
-     # add the value of each coin type to get the user's total money value   
-    total_value = 0 
-    for i in user_coin_value:
-        total_value = total_value + user_coin_value[i]
-      
-    # now that everything is computed, lets output the results to the user      
-    print ('\n \n')     
-    print ("It looks like you have a total of {0} coins, made up of: \n".format
-    (str(int(sum(user_coin_counts.values())))))
+        user_coins['wrappers'][i] = user_coins['counts'][i] // coins['wrappers'][i] 
     
-    for i in user_coin_counts:
-        print (i + ' | ' + str(int(user_coin_counts[i])) + ' | ' + str(round(
-        user_coin_value[i],2)))
-    print ('\n') 
+    for i in coins['values']:
+        user_coins['values'][i] = user_coins['counts'][i] * coins['values'][i]
+            
+    total_coin_count = sum(user_coins['counts'].values())
+    total_coin_value = sum(user_coins['values'].values())
+    total_wrapper_count = sum(user_coins['wrappers'].values())
     
-    print ("To make your life easier, you should need:  \n")
-    for i in user_wrapper_counts:
-        print ('    '+ str(int(user_wrapper_counts[i])) + ' ' + i + 
-        ' wrappers.')
-    print ('\n \n')
- 
-     
+    print('\nIt looks like you have a total of {0} coins, made up of: '.format(
+    str(int(total_coin_count))))
+    
+    for i in user_coins['counts']:
+        print('\t' + str(int(user_coins['counts'][i])) + ' ' + i + ' totaling $'
+        + str(round(user_coins['values'][i],2)))
+    print('\t' + str(int(total_coin_count)) + ' coins in all totaling $' + 
+    str(round(float(total_coin_value),2)))
+    print('\n')
+    
+    print('To make your life easier, you should need {0} wrappers in total '
+    'made up of:    '.format(str(int(total_wrapper_count))))
+    
+    for i in user_coins['wrappers']:
+        print('\t' + str(int(user_coins['wrappers'][i])) + ' ' + i + ' wrappers.')
+    print('\n\n')
+    
+
 def _unit_choice():
     print ("What units of weight would you like to use?")
     unit_pref = input("Enter 1 for grams. Enter 2 for pounds  > ")
