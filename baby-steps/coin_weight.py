@@ -79,7 +79,8 @@ def _user_input(units):
             'quarters': 0.25
             }
             }
-
+            
+    # Created the nested dict to host all user coin data 
     user_coins = {}
     user_coins['weights'] = {}
     user_coins['counts'] = {} 
@@ -99,7 +100,7 @@ def _user_input(units):
     if units == 2:
         for i in user_coins['weights']:
             user_coins['weights'][i] = user_coins['weights'][i] * 453.592
-    
+
     for i in coins['weights']:
         user_coins['counts'][i] = user_coins['weights'][i] // coins['weights'][i]
     
@@ -108,6 +109,7 @@ def _user_input(units):
     
     for i in coins['values']:
         user_coins['values'][i] = user_coins['counts'][i] * coins['values'][i]
+        
             
     total_coin_count = sum(user_coins['counts'].values())
     total_coin_value = sum(user_coins['values'].values())
