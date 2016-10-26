@@ -5,19 +5,9 @@
 # Write out to CSV (will surely have to do more clean up here) 
 
 
-'''
-
-Table is initiated with the <table class="table0 "> tags
-Table contents are within the <tbody> and </tbody> tags 
-Meal-parts are within <tr class="meal_header">
-Item entries are within <td class="first alt"> 
-
-
-'''
-
-
 from bs4 import BeautifulSoup 
 import urllib.request 
+import itertools 
 from time import * 
 import sys 
 import datetime 
@@ -37,8 +27,30 @@ entries = soup.findAll('td', {'class' : 'first alt'})
 nutrients = soup.findAll('td', {'class' : 'alt nutrient-column'})
 macroValues = soup.findAll('span', {'class' : 'macro-value'})
 macroPercent = soup.findAll('span', {'class' : 'macro-percentage'})
+other_nuts = soup.findAll('td')
 
-# empty dict to store each meal_part in (bfast, lunch, dinner, snack)
+		
+other_nutrients = []
+for element in other_nuts:
+    try:
+	    other_nutrients.append(int(element.string))
+    except TypeError:
+	    pass 
+    except ValueError:
+	    pass
+
+other_nutrients_list = [tuple(other_nutrients[i:i+3]) for i in 
+					 range(0,len(other_nutrients),3)]
+print(other_nutrients_list)
+
+
+##PRINT DEBUGGING
+# print(tables)
+# print(entries)
+# print(nutrients)
+# print(other_nutrients_list)
+
+
 diary_entries = []
 for element in entries:
     if 'href' not in str(element):
@@ -55,32 +67,45 @@ for element in entries:
     if 'href' not in str(element) and len(element.string.split()) > 1:
 	    counter = counter + 1 
 	    food.append(element.string.strip() + ' - ' +str(counter))
-
-# for x in range(0,len(diary_entries)):
-    # print(diary_entries[x])
 	
 macro_values = []
 for element in macroValues:
-    macro_values.append(int(element.string.strip()))
+	#print(str(element) + '\n\n\n')
+    try:
+	    macro_values.append(int(element.string.strip()))
+    except ValueError:
+	    macro_values.append(0)
 	
 macro_percentages = []
 for element in macroPercent:
-    macro_percentages.append(int(element.string.strip()))
+    try:
+	    macro_percentages.append(int(element.string.strip()))
+    except ValueError:
+	    macro_percentages.append(0)
 
-# PRINT DEBUGGING 	
-# print(macro_values)
-# print(macro_percentages)
+macros = ['Carbs', 'Fat', 'Protein']		
+macros_remaining = macro_values[len(macro_values)- 3:len(macro_values)]	
+for i in range(0, len(macros_remaining)):
+    macros_remaining[i] = macros[i] + ' - ' + str(macros_remaining[i]) + 'g'
+	
+
+##PRINT DEBUGGING 	
+# print((macro_values))
+# print((macro_percentages))
+# print(macros_remaining) 
 # print(food)
 
-''' NOTES:
-	We know macro values and percentages are in sets of 3 (carbs,fat,protein)
-	Use it to our advantage and leverage that logic 
-'''
-
-carbs = []
-fat = []
-protein = []
-
-# determine how to have the list send each of its items to their category 
-i = 0 
-for x in range(0,len(macro_values)):
+# SOURCE: 
+# http://stackoverflow.com/questions/15266593/how-to-group-list-items-into-tuple
+# Converting the macro data into a list of tuples, where each tuple provides 
+# the values for (Cabrs, Fat, Protein) 
+macro_value_list = [tuple(macro_values[i:i+3]) for i in range(0,len(macro_values),3)]
+macro_percent_list = [tuple(macro_percentages[i:i+3]) for i in 
+					  range(0,len(macro_percentages),3)]
+					  
+# print('Macro Values') 
+# print(macro_value_list) 
+# print('Macro Percentages') 
+# print(macro_percent_list) 
+# print('Macros Remaining')
+# print(macros_remaining) 
