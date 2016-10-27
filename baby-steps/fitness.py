@@ -17,6 +17,7 @@ import itertools
 from time import * 
 import sys 
 import datetime 
+import csv 
 
 date = strftime('%Y-%m-%d', localtime())
 
@@ -61,14 +62,19 @@ for element in entries:
     if 'href' not in str(element) and len(element.string.split()) == 1:
         meal_parts.append(element.string)
 
-# includes only the food entries 
-food = [] 
-counter= 0 
+counter = 0 
+food = []    
 for element in entries:
-    if 'href' not in str(element) and len(element.string.split()) > 1:
-	    counter = counter + 1 
-	    food.append(element.string.strip() + ' - ' +str(counter))
-
+    if 'href' not in str(element) and len(element.string.strip()) > 1:
+        counter = counter + 1 
+        food.append(str(counter))
+        food.append(element.string.strip())
+ 
+for i in range(0,len(food)):
+    food[i] = str(food[i]).replace(',','')
+    
+food = [tuple(food[i:i+2]) for i in range(0,len(food),2)]
+    
 # includes the macro values in a single list 		
 macro_values = []
 for element in macroValues:
@@ -98,12 +104,43 @@ for i in range(0, len(macros_remaining)):
 
 del macro_value_list[len(macro_value_list)-1]
 
-print(macro_value_list)
+print(other_nutrients_list)
+for element in other_nutrients_list:
+    print( str([''.join(str(s)) for s in element]))
 	
-	
-# SOURCE: 
+
+    # SOURCE: 
 # http://stackoverflow.com/questions/15266593/how-to-group-list-items-into-tuple
 # Converting the macro data into a list of tuples, where each tuple provides 
 # the values for (Cabrs, Fat, Protein) 
 
-					  
+count = 0 
+macro_file_write = 'macros_' + date + '.csv'
+with open(macro_file_write,'w') as file:
+    for element in macro_value_list:
+        count = count + 1 
+        if count == 1:
+            file.write(str(count-1) + ',Carbs, Fat, Protein  \n')
+        else:
+            file.write(str(count-1) + ',' + ''.join(str(s) + ',' for s in element) + '\n')
+
+count = 0 
+food_entries_write = 'food_entries_' + date + '.csv'
+with open(food_entries_write,'w') as file:
+    for element in food:
+        count = count + 1
+        if count == 1:
+            file.write('Item ID,Item Name \n')
+        else:
+            file.write(''.join(str(s) + ',' for s in element) + '\n')
+            
+count = 0 
+other_nutrients_write = 'other_nuts_' + date + '.csv'
+with open(other_nutrients_write,'w') as file:
+    for element in other_nutrients_list:
+        count = count + 1
+        if count == 1:
+            file.write('Counter, Calories,Sodium,Sugar \n')
+        else:
+            file.write(str(count) + ',' +''.join(str(s) + ',' for s in element)  + '\n')
+            
