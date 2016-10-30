@@ -37,7 +37,7 @@ macroValues = soup.findAll('span', {'class' : 'macro-value'})
 macroPercent = soup.findAll('span', {'class' : 'macro-percentage'})
 other_nuts = soup.findAll('td')
 
-		
+
 other_nutrients = []
 for element in other_nuts:
     try:
