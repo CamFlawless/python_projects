@@ -9,6 +9,9 @@ password = "Padthai123*"
 from pypodio2 import api
 import json 
 import pandas as pd 
+from sqlalchemy import create_engine
+
+
 
 c = api.OAuthClient(
     client_id,
@@ -23,22 +26,17 @@ c = api.OAuthClient(
 # THIS IS PROVIDING LIST OF ITEMS FROM THE LEADS APP
 # APPEARS TO BE A HEAVILY NESTED OBJECT (LIST OF DICTS OF LISTS, ETC.) 
 item_details = c.Application.get_items(25523237)['items']
+offer_items = c.Application.get_items(25523238)['items']
+whiteboard_items = c.Application.get_items(25523241)['items']
 
-
-
-# x = 1 
-# for record in item_details:
-#     if x == 1 :
-#         print(record['fields'])
-#         quit() 
-#         for part in record:
-#             print(['part ' + str(x) + ' is..'])
-#             print(part) 
-#             print('\n')
-#     x = x + 1 
+# for item in whiteboard_items:
+#     print(type(item))
+#     print(item) 
+#     print('\n\n')
 # quit() 
 
-
+# print(offer_items)
+# quit() 
 
 def _get_podio_data(my_list, field):
     output_list = []
@@ -48,80 +46,49 @@ def _get_podio_data(my_list, field):
                 output_list.append(record[part])
     return(output_list)
     
-item_id = _get_podio_data(item_details, "app_item_id")
-# seller_name = _get_podio_data(item_details, "title")
-created_on = _get_podio_data(item_details, "created_on")
-link = _get_podio_data(item_details, "link")
-# created_via = _get_podio_data(item_details, "created_via")
-created_by = _get_podio_data(item_details, "created_by")[0]['name']
-last_event_on = _get_podio_data(item_details, "last_event_on")
-items = _get_podio_data(item_details, "fields")
-# print(type(fields)) ---> LIST of DICTS 
+# # objects related to sales lead application    
+# sales_lead_item_id = _get_podio_data(item_details, "app_item_id")
+# sales_lead_created_on = _get_podio_data(item_details, "created_on")
+# sales_lead_link = _get_podio_data(item_details, "link")
+# sales_lead_created_by = _get_podio_data(item_details, "created_by")[0]['name']
+# sales_lead_last_event_on = _get_podio_data(item_details, "last_event_on")
+# sales_lead_items = _get_podio_data(item_details, "fields")
 
-# fields_i_want = [217204616, 217204617, 217204620 ,217204621, 217204622, 217204623, 217204624, 217204626, 217204630, 217204631, 217204632,
-#                  217204633, 217204639, 217204640, 217204641, 217204642, 217204643, 217204644, 217251047, 217204647, 217204648, 217204652, 
-#                  217204653, 217204654, 217204655, 217204656, 217204658, 217204659]
+# # objects related to offers application    
+# offer_item_id =  _get_podio_data(offer_items, "app_item_id")
+# offer_lead_created_on = _get_podio_data(offer_items, "created_on")
+# offer_lead_link = _get_podio_data(offer_items, "link")
+# offer_lead_created_by = _get_podio_data(offer_items, "created_by")[0]['name']
+# offer_lead_last_event_on = _get_podio_data(offer_items, "last_event_on")
+# offer_lead_items = _get_podio_data(offer_items, "fields")
 
 
-# if for the record, the field id key is found, append list with values 
-# if not, append the list with empty string 
-# need to do check with IF statement on loop iterating through the records 
+whiteboard_item_id =  _get_podio_data(whiteboard_items, "app_item_id")
+whiteboard_lead_created_on = _get_podio_data(whiteboard_items, "created_on")
+whiteboard_lead_link = _get_podio_data(whiteboard_items, "link")
+whiteboard_lead_created_by = _get_podio_data(whiteboard_items, "created_by")[0]['name']
+whiteboard_lead_last_event_on = _get_podio_data(whiteboard_items, "last_event_on")
+whiteboard_lead_items = _get_podio_data(whiteboard_items, "fields")
 
+
+
+## TEST PRINT 
+# for item in sales_lead_items:
+#     print(item)
+#     print('\n\n\n')
+# for item in offer_items:
+#     print(item)
+#     print('\n\n\n')
+# for item in whiteboard_lead_items:
+#     print(item)
+#     print('\n\n\n')
+# quit() 
 
 # items --> list of list of dicts?
 # record --> list of dicts 
 # entry --> 
 
-
-
-
-x = 0 
-y = 0 
-
-# any(word in str(record) for word in "'field_id': " + str(field_id))
-
-# def _my_fav_function(field_id, list_to_search):
-#     return_list = [] # Start with an empty to list to be return once appended 
-#     # print("'field_id': " + str(field_id))
-#     for record in list_to_search: # Now iterate thru the list 
-#         if any(word in str(record) for word in "'field_id': " + str(field_id)): # if the field id is in the record...
-#             for component in record:
-#                 if component['field_id'] == field_id:
-#                     return_list.append(component['values'][0]['value'])
-#         else: # if the field id is not in the record..
-#             return_list.append("") # append the return_list with an empty string 
-#     return(return_list) # the function will return the newly appended list 
-
-# print(_my_fav_function(217204654, items))
-# quit() 
-
-
-
-field_str = ["'type': 'money', 'field_id': 217204647"]
-return_list = [] # Start with an empty to list to be return once appended 
-
-# for record in items: # Now iterate thru the list 
-#     print(any(word in str(record) for word in field_str))
-# quit() 
-
-# print(len(items))
-# for record in items: # Now iterate thru the list 
-#     if any(word in str(record) for word in field_str): # if the field id is in the record...
-#         # print(str(record))
-#         # print('\n\n')
-#         for component in record:
-#             if component['field_id'] == 217204647:
-#                 return_list.append(component['values'][0]['value'])
-#     else: # if the field id is not in the record..
-#         # print(str(record))
-#         # print('\n\n')
-#         return_list.append("") # append the return_list with an empty string 
-# print(return_list) # the function will return the newly appended list 
-# quit() 
-
-
-
-def _my_fav_function(field_str, field_id, list_to_search):
+def _get_podio_data_a(field_str, field_id, list_to_search):
     return_list = [] # Start with an empty to list to be return once appended 
     for record in list_to_search: # Now iterate thru the list 
         if any(word in str(record) for word in field_str): # if the field id is in the record...
@@ -131,6 +98,15 @@ def _my_fav_function(field_str, field_id, list_to_search):
         else: # if the field id is not in the record..
             return_list.append("") # append the return_list with an empty string 
     return(return_list) # the function will return the newly appended list 
+
+def _extract_podio_data(list_to_dig, key):
+    return_list = []
+    for record in list_to_dig:
+        try:
+            return_list.append(record[key])
+        except TypeError:
+            return_list.append('')
+    return(return_list)
 
 def _date_grabber(field_str, field_id, list_to_search):
     return_list = [] # Start with an empty to list to be return once appended 
@@ -143,100 +119,171 @@ def _date_grabber(field_str, field_id, list_to_search):
             return_list.append("") # append the return_list with an empty string 
     return(return_list) # the function will return the newly appended list 
 
-# SEE HOW TO CREATE A SINGLE FUNCTION TO DO WHAT BOTH OF THESE ARE DOING 
-def _further_dig(list_to_dig):
-    return_list = []
-    for record in list_to_dig:
-        try:
-            return_list.append(record['text'])
-        except TypeError:
-            return_list.append('')
-    return(return_list)
-
-def _further_digging(list_to_dig):
-    return_list = []
-    for record in list_to_dig:
-        try:
-            return_list.append(record['name'])
-        except TypeError:
-            return_list.append('')
-    return(return_list)
-
-def _return_title(list_to_dig):
-    return_list = []
-    for record in list_to_dig:
-        try:
-            return_list.append(record['title'])
-        except TypeError:
-            return_list.append('')
-    return(return_list)
-# print(_further_dig(house_bed))
-# quit() 
-
-# print(_my_fav_function(["'type': 'money', 'field_id': 217204647"],217204647, items))
-# # # print(_my_fav_function(["'field_id': 21720467"],21720467, items))
-
-# quit() 
-        
-
-# search = ["'field_id': 217204654"]
-# return_list = []
-# for record in items:
-#     # print(record)
-#     # print(str(record))
-#     # quit() 
-#     if any(word in str(record) for word in search):        
-#         # Now that we know the field has a value for this record
-#         # We want to find it and append it to the return_list  
-#         for component in record:
-#             if component['field_id']  == 217204654:
-#                 return_list.append(component['values'][0]['value'])
-#     else:
-#         return_list.append("")
-# print(len(return_list))
-# quit() 
-
-'''
-STILL OUTSTANDING ATTRIBUTES:
-
-'''
-
-seller_name = _my_fav_function(["'field_id': 217204654"],217204616, items)                           # SELLER NAME 
-property_address = _my_fav_function(["'field_id': 217204617"],217204617,items)                      # PROPERTY ADDRESS
-seller_phone = _my_fav_function(["'field_id': 217204621"],217204621,items)                          # SELLER PHONE
-seller_email = _my_fav_function(["'field_id': 217204622"],217204622,items)                          # SELLER EMAIL
-max_allowed_offer = _my_fav_function(["'field_id': 217204656"],217204656,items)                     # MAX ALLOWED OFFER  
-pp_sqft_arv = _my_fav_function(["'field_id': 217204648"],217204648,items)                           # PP/SQFT ARV
-arv = _my_fav_function(["'field_id': 217204653"],217204653,items)                                   # ARV
-repair_est = _my_fav_function(["'field_id': 217204654"],217204654, items)                           # REPAIR PRICE EST 
-assignment_fee_wanted = _my_fav_function(["'field_id': 217204655"],217204655,items)                 # ASSIGNMENT FEE WANTED 
-comp_pp_sqft = _my_fav_function(["'type': 'money', 'field_id': 217204647"],217204647, items)        # COMPS PP/SQFT 
-comp_address = _my_fav_function(["'field_id': 217251047"],217251047,items)                          # COMPS ADDRESS
-house_sqft = _my_fav_function(["'type': 'number', 'field_id': 217204644"],217204644,items)          # HOUSE SQFT
-house_bed = _further_dig(_my_fav_function(["'field_id': 217204642"],217204642,items))               # HOUSE BEDS
-house_bath = _further_dig(_my_fav_function(["'field_id': 217204643"],217204643,items))              # HOUSE BATHS 
-call_attempts = _my_fav_function(["'field_id': 217204626"],217204626,items)                         # CALL ATTEMPTS 
-seller_asking_price = _my_fav_function(["'field_id': 217204639"],217204639,items)                   # SELLER ASKING PRICE 
-offer_amount = _my_fav_function(["'field_id': 217204658"],217204658,items)                          # OFFER AMOUNT 
-notes = _my_fav_function(["field_id': 217204638"],217204638,items)                                  # NOTES
-appointment_date = _date_grabber(["field_id': 217204633"],217204633,items)                          # APPOINTMENT DATE 
-motivation = _further_dig(_my_fav_function(["'field_id': 217204632"],217204632,items))              # MOTIVATION 
-status = _further_dig(_my_fav_function(["'field_id': 217204631"],217204631,items))                  # STATUS  
-source = _further_dig(_my_fav_function(["'field_id': 217204630"],217204630,items))                  # SOURCE  
-parcel = _my_fav_function(["'field_id': 217204620"],217204620,items)                                # PARCEL  
-deal_type = _further_dig(_my_fav_function(["'field_id': 217204623"],217204623,items))               # DEAL TYPE   
-acqusitions_manager = _further_digging(_my_fav_function(["'field_id': 217204624"],217204624,items)) # ACQUSITIONS MANAGER    
-campaign = _return_title(_my_fav_function(["'field_id': 217204659"],217204659,items))               # CAMPAIGN   
-rehab = _further_dig(_my_fav_function(["'field_id': 217204652"],217204652,items))                   # REHAB   
-
-offer_range = _my_fav_function(["'field_id': 217204657"],217204657,items)                         # OFFER RANGE
 
 
+# # SNIPPET OF CODE BELOW WILL GRAB DATA FROM SALES LEAD APP 
+# seller_name = _get_podio_data_a(["'field_id': 217204654"],217204616, sales_lead_items)                           # SELLER NAME 
+# property_address = _get_podio_data_a(["'field_id': 217204617"],217204617,sales_lead_items)                      # PROPERTY ADDRESS
+# seller_phone = _get_podio_data_a(["'field_id': 217204621"],217204621,sales_lead_items)                          # SELLER PHONE
+# seller_email = _get_podio_data_a(["'field_id': 217204622"],217204622,sales_lead_items)                          # SELLER EMAIL
+# max_allowed_offer = _get_podio_data_a(["'field_id': 217204656"],217204656,sales_lead_items)                     # MAX ALLOWED OFFER  
+# pp_sqft_arv = _get_podio_data_a(["'field_id': 217204648"],217204648,sales_lead_items)                           # PP/SQFT ARV
+# arv = _get_podio_data_a(["'field_id': 217204653"],217204653,sales_lead_items)                                   # ARV
+# repair_est = _get_podio_data_a(["'field_id': 217204654"],217204654, sales_lead_items)                           # REPAIR PRICE EST 
+# assignment_fee_wanted = _get_podio_data_a(["'field_id': 217204655"],217204655,sales_lead_items)                 # ASSIGNMENT FEE WANTED 
+# comp_pp_sqft = _get_podio_data_a(["'type': 'money', 'field_id': 217204647"],217204647, sales_lead_items)        # COMPS PP/SQFT 
+# comp_address = _get_podio_data_a(["'field_id': 217251047"],217251047,sales_lead_items)                          # COMPS ADDRESS
+# house_sqft = _get_podio_data_a(["'type': 'number', 'field_id': 217204644"],217204644,sales_lead_items)          # HOUSE SQFT
+# house_bed = _extract_podio_data(_get_podio_data_a(["'field_id': 217204642"],217204642,sales_lead_items), 'text')               # HOUSE BEDS
+# house_bath = _extract_podio_data(_get_podio_data_a(["'field_id': 217204643"],217204643,sales_lead_items), 'text')              # HOUSE BATHS 
+# call_attempts = _get_podio_data_a(["'field_id': 217204626"],217204626,sales_lead_items)                         # CALL ATTEMPTS 
+# seller_asking_price = _get_podio_data_a(["'field_id': 217204639"],217204639,sales_lead_items)                   # SELLER ASKING PRICE 
+# offer_amount = _get_podio_data_a(["'field_id': 217204658"],217204658,sales_lead_items)                          # OFFER AMOUNT 
+# notes = _get_podio_data_a(["field_id': 217204638"],217204638,sales_lead_items)                                  # NOTES
+# appointment_date = _date_grabber(["field_id': 217204633"],217204633,sales_lead_items)                          # APPOINTMENT DATE 
+# motivation = _extract_podio_data(_get_podio_data_a(["'field_id': 217204632"],217204632,sales_lead_items), 'text')              # MOTIVATION 
+# status = _extract_podio_data(_get_podio_data_a(["'field_id': 217204631"],217204631,sales_lead_items), 'text')                  # STATUS  
+# source = _extract_podio_data(_get_podio_data_a(["'field_id': 217204630"],217204630,sales_lead_items), 'text')                  # SOURCE  
+# parcel = _get_podio_data_a(["'field_id': 217204620"],217204620,sales_lead_items)                                # PARCEL  
+# deal_type = _extract_podio_data(_get_podio_data_a(["'field_id': 217204623"],217204623,sales_lead_items),'text')               # DEAL TYPE   
+# acqusitions_manager = _extract_podio_data(_get_podio_data_a(["'field_id': 217204624"],217204624,sales_lead_items), 'name') # ACQUSITIONS MANAGER    
+# campaign = _extract_podio_data(_get_podio_data_a(["'field_id': 217204659"],217204659,sales_lead_items), 'title')               # CAMPAIGN   
+# rehab = _extract_podio_data(_get_podio_data_a(["'field_id': 217204652"],217204652,sales_lead_items), 'text')                   # REHAB   
+# offer_range = _get_podio_data_a(["'field_id': 217204657"],217204657,sales_lead_items)                         # OFFER RANGE
 
 
+# sales_leads_df = pd.DataFrame({
+#                    'sales_lead_item_id': sales_lead_item_id, 
+#                    'created_on': sales_lead_created_on, 
+#                    # 'sales_lead_link': sales_lead_link, 
+#                    'sales_lead_created_by': sales_lead_created_by, 
+#                    'seller_name': seller_name, 
+#                    'property_address': property_address,
+#                    'seller_phone': seller_phone,
+#                    'seller_email': seller_email, 
+#                    'last_event_on' : sales_lead_last_event_on, 
+#                    'max_allowed_offfer' : max_allowed_offer, 
+#                    'pp_sqft_arv': pp_sqft_arv, 
+#                    'arv': arv, 
+#                    'repair_est' : repair_est, 
+#                    'assignment_fee_wanted' : assignment_fee_wanted, 
+#                    'comp_pp_sqft': comp_pp_sqft, 
+#                    'comp_address': comp_address, 
+#                    'house_sqft': house_sqft, 
+#                    'house_bed': house_bed, 
+#                    'house_bath': house_bath, 
+#                    'call_attempts': call_attempts, 
+#                    'seller_asking_price': seller_asking_price, 
+#                    'offer_amount': offer_amount, 
+#                    'appointment_date' : appointment_date, 
+#                    'motivation' : motivation, 
+#                    'status' : status, 
+#                    'source' : source, 
+#                    'parcel' : parcel, 
+#                    'deal_type' : deal_type, 
+#                    'acqusitions_manager' : acqusitions_manager, 
+#                    'campaign': campaign, 
+#                    'rehab' : rehab 
+#                    # 'notes': notes
+#                     })
 
-print(offer_range)
+# # print(sales_leads_df)
+
+
+# offer_address = _get_podio_data_a(["'field_id': 217204663"],217204663, offer_lead_items)
+# offer_dilligence_period_in_days = _get_podio_data_a(["'field_id': 217204685"],217204685, offer_lead_items)
+# offer_closing_period_in_days = _get_podio_data_a(["'field_id': 217204687"],217204687, offer_lead_items)
+# offer_emd = _get_podio_data_a(["'field_id': 217204684"],217204684, offer_lead_items)
+# offer_price = _get_podio_data_a(["'field_id': 217204683"],217204683, offer_lead_items)
+# offer_due_dilligence_end = _date_grabber(["field_id': 217204686"],217204686,offer_lead_items)      
+# offer_closing_by_date = _date_grabber(["field_id': 217204688"],217204688,offer_lead_items)   
+# offer_sales_lead_item_id = _extract_podio_data(_get_podio_data_a(["'field_id': 217204662"],217204662, offer_lead_items),'app_item_id')
+
+
+# offers_df = pd.DataFrame({
+#                     'offer_id': offer_item_id, 
+#                     'offer_sales_lead_item_id': offer_sales_lead_item_id, 
+#                     'offer_lead_created_on': offer_lead_created_on, 
+#                     'offer_lead_created_by': offer_lead_created_by, 
+#                     'offer_lead_last_event_on': offer_lead_last_event_on,
+#                     'offer_address': offer_address,
+#                     'offer_dilligence_period_in_days': offer_dilligence_period_in_days,
+#                     'offer_closing_period_in_days': offer_closing_period_in_days,
+#                     'offer_emd' : offer_emd,
+#                     'offer_price' : offer_price, 
+#                     'offer_due_dilligence_end' : offer_due_dilligence_end, 
+#                     'offer_closing_by_date' : offer_closing_by_date
+#                     })
+
+# print(offers_df)
+
+
+whiteboard_sales_lead_item_id = _extract_podio_data(_get_podio_data_a(["'field_id': 217204715"],217204715, whiteboard_lead_items),'app_item_id')
+whiteboard_offer_item_id = _extract_podio_data(_get_podio_data_a(["'field_id': 217204716"],217204716, whiteboard_lead_items),'app_item_id')
+whiteboard_tax_id = _get_podio_data_a(["'field_id': 217204712"],217204712, whiteboard_lead_items)
+whiteboard_status = _extract_podio_data(_get_podio_data_a(["'field_id': 217204721"],217204721,whiteboard_lead_items), 'text')  
+whiteboard_transaction_status = _extract_podio_data(_get_podio_data_a(["'field_id': 217204723"],217204723,whiteboard_lead_items), 'text')  
+whiteboard_marketing_stage = _extract_podio_data(_get_podio_data_a(["'field_id': 217204725"],217204725,whiteboard_lead_items), 'text')  
+whiteboard_marketing_price = _get_podio_data_a(["'field_id': 217204726"],217204726, whiteboard_lead_items)
+# STILL TO WORK ON UN-NESTING THE WEB LINK LIST 
+# whiteboard_web_link = _extract_podio_data(_get_podio_data_a(["'field_id': 217204727"],217204727, whiteboard_lead_items),'resolved_url')
+whiteboard_showing_date  = _date_grabber(["field_id': 217204728"],217204728,whiteboard_lead_items)   
+whiteboard_closing_date  = _date_grabber(["field_id': 217204740"],217204740,whiteboard_lead_items)   
+whiteboard_assignment_stage = _extract_podio_data(_get_podio_data_a(["'field_id': 217204730"],217204730,whiteboard_lead_items), 'text')  
+whiteboard_assignee_name = _get_podio_data_a(["'field_id': 217204732"],217204732, whiteboard_lead_items)
+whiteboard_assignee_name = _get_podio_data_a(["'field_id': 217204732"],217204732, whiteboard_lead_items)
+# these IDs are from multiple apps currently -- should I pull app_ID with it? 
+whiteboard_assignee_id = _extract_podio_data(_get_podio_data_a(["'field_id': 217204731"],217204731, whiteboard_lead_items),'app_item_id')
+whiteboard_buyer_emd = _get_podio_data_a(["'field_id': 217204735"],217204735, whiteboard_lead_items)
+whiteboard_closing_location = _get_podio_data_a(["'field_id': 217204742"],217204742, whiteboard_lead_items)
+# these IDs are from multiple apps currently -- should I pull app_ID with it? 
+whiteboard_title_company_id = _extract_podio_data(_get_podio_data_a(["'field_id': 217204741"],217204741, whiteboard_lead_items),'app_item_id')
+whiteboard_assignee_id = _extract_podio_data(_get_podio_data_a(["'field_id': 217204744"],217204744, whiteboard_lead_items),'text')
+
+
+whiteboard_df = pd.DataFrame({
+                            'whiteboard_sales_lead_item_id': whiteboard_sales_lead_item_id, 
+                            'whiteboard_offer_item_id': whiteboard_offer_item_id, 
+                            'whiteboard_tax_id': whiteboard_tax_id, 
+                            'whiteboard_status': whiteboard_status, 
+                                                      
+})
+
+
+# print(whiteboard_marketing_price); 
+# print(whiteboard_marketing_stage)
+# print(whiteboard_assignment_stage)
 quit() 
+# NOW GRABBING DATA FROM OFFERS APP 
+# MANY FIELDS ARE DUPLICITOUS SO NO NEED TO BRING THEM ALL 
+# JUST ENSURE WE GET THE SALES LEAD ID 
+
+
+# TEMP HOLDER CODE TO LOAD DATA TO POSTGRES SQL DB 
+engine = create_engine('postgresql://postgres:B*oker123@localhost:5432/podio_test')
+sales_leads_df.to_sql("sales_leads_fact", engine)
+offers_df.to_sql("offers_fact", engine)
+quit() 
+
+
+file_destination_path = 'C:\\Users\\Cameron\Documents\\Python'
+
+sales_leads_df.to_csv(file_destination_path + '\podio_sales_leads.csv', index = False)
+offers_df.to_csv(file_destination_path + '\podio_offers.csv', index = False)
+
+quit() 
+
+
+
+'''
+
+SECTION BELOW IS UNUSED
+    - includes comment and test code for misc. use. 
+
+''' 
+
+
+
 
 
 
@@ -268,48 +315,6 @@ quit()
 # print("call_attempts" + str(len(call_attempts)))
 # quit() 
 
-df = pd.DataFrame({
-                   'item_id': item_id, 
-                   'created_on': created_on, 
-                   # 'link': link, 
-                   'created_by': created_by, 
-                   'seller_name': seller_name, 
-                   'property_address': property_address,
-                   'seller_phone': seller_phone,
-                   'seller_email': seller_email, 
-                   'last_event_on' : last_event_on, 
-                   'max_allowed_offfer' : max_allowed_offer, 
-                   'pp_sqft_arv': pp_sqft_arv, 
-                   'arv': arv, 
-                   'repair_est' : repair_est, 
-                   'assignment_fee_wanted' : assignment_fee_wanted, 
-                   'comp_pp_sqft': comp_pp_sqft, 
-                   'comp_address': comp_address, 
-                   'house_sqft': house_sqft, 
-                   'house_bed': house_bed, 
-                   'house_bath': house_bath, 
-                   'call_attempts': call_attempts, 
-                   'seller_asking_price': seller_asking_price, 
-                   'offer_amount': offer_amount, 
-                   'appointment_date' : appointment_date, 
-                   'motivation' : motivation, 
-                   'status' : status, 
-                   'source' : source, 
-                   'parcel' : parcel, 
-                   'deal_type' : deal_type, 
-                   'acqusitions_manager' : acqusitions_manager, 
-                   'campaign': campaign, 
-                   'rehab' : rehab 
-                   # 'notes': notes
-                    })
-
-print(df)
-
-
-# file_destination_path = 'C:\\Users\\Cameron\Documents\\Python'
-# df.to_csv(file_destination_path + '\podio_sales_leads.csv', index = False)
-
-quit() 
 
 
 
@@ -323,40 +328,6 @@ quit()
 #                 except KeyError:
 #                     return_list.append('') 
 #     return(return_list)
-
-## Below are the "simple" fields -- they do NOT require additional un-nesting 
-## Will work on additional code for other items
-seller_name = _return_data(items,217204616)        # SELLER NAME 
-property_address = _return_data(items,217204617)   # PROPERTY ADDRESS
-seller_phone = _return_data(items,217204621)       # SELLER PHONE
-seller_email = _return_data(items,217204622)       # SELLER EMAIL
-max_allowed_offer = _return_data(items,217204656)  # MAX ALLOWED OFFER  
-pp_sqft_arv = _return_data(items,217204648)        # PP/SQFT ARV
-arv = _return_data(items,217204653)                # ARV
-repair_est = _return_data(items,217204654)         # REPAIR PRICE EST 
-assignment_fee = _return_data(items,217204655)     # ASSIGNMENT FEE WANTED 
-comp_pp_sqft = _return_data(items,21720467)        # COMPS PP/SQFT 
-comp_address = _return_data(items,217251047)       # COMPS ADDRESS
-house_sqft = _return_data(items,217204644)         # HOUSE SQFT
-house_bed = _return_data(items,217204642)          # HOUSE BEDS
-house_bath = _return_data(items,217204643)         # HOUSE BATHS 
-call_attempts = _return_data(items,217204626)      # CALL ATTEMPTS 
-
-# print(len(seller_name))
-# print(len(property_address))
-# print(len(seller_phone))
-# print(len(seller_email))
-# print(len(max_allowed_offer))
-# print(len(pp_sqft_arv))
-# print(len(repair_est)) # 2 ENTRIES
-# print(len(assignment_fee)) # 2 ENTRIES
-# print(len(comp_pp_sqft)) # 0 ENTRIES 
-# quit() 
-# print(len(comp_address))
-# print(len(house_sqft))
-# print(len(house_bed))
-# print(len(house_bath))
-# print(len(call_attempts))
 
 
 
@@ -373,20 +344,6 @@ property_address = _return_data(fields,217204617)
 
 print(_return_data_b(property_address))
 quit() 
-
-
-addy = []
-for entry in property_address:
-    addy.append(entry[0]['value'])
-print(addy)
-quit() 
-print(property_address['value'])
-print(len(property_address))
-quit() 
-# seller_phone = _return_data(fields,217204621)
-
-# seller_names = _return_data(fields,217204616)
-
 
 
 
@@ -431,20 +388,6 @@ for record in fields:
     # print('\n\n')
     x = x + 1 
 quit()     
-
-''' 
-fields[0] = seller_name
-fields[1] = property address
-fields[4] = seller phone
-fields[5] = seller email 
-fields[6] = deal type 
-fields[7] = acquisition manager 
-fields[11] = status 
-fields[12] = motivation 
-fields[20] = max allowed offer 
-fields[21] = campaign 
-fields[
-'''
 
 print(type(fields))
 print(fields[0])
