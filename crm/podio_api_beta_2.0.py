@@ -3,8 +3,8 @@
 
 client_id = "insert client id"
 client_secret = "insert client secret"
-username = "camjcollins@gmail.com"
-password = "Padthai123*"
+username = "insert email"
+password = "insert password*"
  
 from pypodio2 import api
 import pygsheets 
@@ -224,7 +224,7 @@ print(appointment_df)
 print('\n\n')
 
 # TEMP HOLDER CODE TO LOAD DATA TO POSTGRES SQL DB 
-engine = create_engine('postgresql://postgres:B*oker123@localhost:5432/podio_test')
+engine = create_engine('postgresql://postgres:PASSWORD@localhost:5432/podio_test')
 
 sales_lead_df.to_sql("sales_leads_fact", engine, if_exists='replace')
 offers_df.to_sql("offers_fact", engine, if_exists='replace')
