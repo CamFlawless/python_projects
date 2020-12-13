@@ -37,7 +37,6 @@ apps_to_grab = [ ["sales_leads", 25523237],
                  ["whiteboard", 25523241], 
                  ["appointments", 25523247] 
                ]
-x = 0 
 for item in apps_to_grab:
     apps_dict[item[0]] = c.Application.get_items(item[1])['items']
 
