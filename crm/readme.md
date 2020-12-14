@@ -7,6 +7,7 @@ This project is inteneded to provide a means of extracting the underlying data f
 - [x] Make connection with API using credentials
 - [x] Retrieve items from applications
 - [x] Identify structure of object returned for application items
+- [x] Push returned (and cleansed) data into a locally hosted PostgresSQL database
 
 **Outstanding**
 - [ ] Remove need to explicitly state field_id values and field_name descriptions
