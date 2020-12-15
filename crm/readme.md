@@ -8,8 +8,10 @@ This project is inteneded to provide a means of extracting the underlying data f
 - [x] Retrieve items from applications
 - [x] Identify structure of object returned for application items
 - [x] Push returned (and cleansed) data into a locally hosted PostgresSQL database
+- [x] Adjusted code to be able to have up to 500 items returned in a single call 
 
 **Outstanding**
+- [ ] Set-up code to be flexible enough to handle applications with 500+ items to be returned 
 - [ ] Remove need to explicitly state field_id values and field_name descriptions
   - [ ] Iterate through items returned and generate list of available fields in dynamic means -- not explicitly stating them
 - [ ] Set-up process automation to re-ping API @ 15 minute intervals
