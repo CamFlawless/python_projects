@@ -30,7 +30,7 @@ def _get_podio_data(my_list, field):
     return(output_list)
 
 
-apps_dict = {}
+app_items = {}
 # APPEND LIST WITH ADDITIONAL APP NAME AND IDs
 apps_to_grab = [ ["sales_leads", 25523237], 
                  ["offers", 25523238], 
@@ -38,8 +38,16 @@ apps_to_grab = [ ["sales_leads", 25523237],
                  ["appointments", 25523247] 
                ]
 
-for item in apps_to_grab:
-    apps_dict[item[0]] = c.Application.get_items(item[1])['items']
+# for item in apps_to_grab:
+#    apps_dict[item[0]] = c.Application.get_items(item[1])['items']
+
+## ADJUSTED CODE TO ALLOW UP TO 500 ITEMS TO BE RETURNED IN A SINGLE REQUEST 
+for app in apps_to_grab:
+    app_items[app[0]] = c.Item.filter(app_id = app[1], attributes = {"limit":500})['items']
+    print(str(c.Item.filter(app_id = app[1], attributes = {"limit":500})['total']) + " items in " + str(app[0]) + "application")
+
+# items = c.Item.filter(app_id=25523237, attributes={"limit": 100})
+   
 
 
 # CREATING EMPTY DICTS TO BE APPENDED 
@@ -52,13 +60,13 @@ item_created_on_dict = {}
 item_last_event_on_dict = {} 
 item_fields_dict = {} 
 
-for key, value in apps_dict.items():
+for key, value in app_items.items():
     app_item_id_dict[key] = _get_podio_data(value, "app_item_id")
     item_created_on_dict[key] = _get_podio_data(value, "created_on")
     item_last_event_on_dict[key] = _get_podio_data(value, "last_event_on")
     item_fields_dict[key] = _get_podio_data(value, "fields")
 
-# print(item_fields_dict['appointments'])
+# print(app_item_id_dict['sales_leads'])
 # quit() 
 
 def _podio_get_field_data_simple(list_to_search, field_id):
@@ -187,7 +195,14 @@ whiteboard_df = pd.DataFrame.from_dict(app_fields_data['whiteboard']).assign(whi
 appointment_df = pd.DataFrame.from_dict(app_fields_data['appointments']).assign(appointment_item_id = app_item_id_dict['appointments'], 
                                                                                 appointment_created_on = item_created_on_dict['appointments'],
                                                                                 appointment_last_event_on = item_last_event_on_dict['appointments'] )
- 
+file_source_path = 'C:\\Users\\kacollins\\Downloads'
+file_destination_path = 'C:\\Users\\kacollins\Downloads'
+
+sales_lead_df.to_csv(file_destination_path + '\podio_sales_leads.csv', index = False)
+offers_df.to_csv(file_destination_path + '\podio_offers.csv', index = False)
+whiteboard_df.to_csv(file_destination_path + '\podio_whiteboard.csv', index = False)
+appointment_df.to_csv(file_destination_path + '\podio_appointments.csv', index = False)
+
  
 print(sales_lead_df)
 print(offers_df)
