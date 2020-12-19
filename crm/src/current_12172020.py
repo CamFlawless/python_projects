@@ -12,6 +12,7 @@ import json
 import pandas as pd 
 from sqlalchemy import create_engine
 import psycopg2
+import usaddress
 
 
 c = api.OAuthClient(
@@ -209,6 +210,24 @@ sales_lead_df = pd.DataFrame.from_dict(app_fields_data['sales_leads']).assign(sa
                                                                               sales_lead_created_on = item_created_on_dict['sales_leads'], 
                                                                               sales_lead_last_event_on = item_last_event_on_dict['sales_leads'] )
 
+
+sales_lead_df['address_tag'] = sales_lead_df.apply(lambda x: usaddress.tag(x['property_address']), axis=1)
+# address_tag = dict(sales_lead_df['address_tag'])
+print(dict(sales_lead_df['address_tag']))
+quit() 
+# address_parts = list(set(address_tag))
+address_parts = []
+for addy_part in address_tag:
+    print(addy_part)
+    quit() 
+    if addy_part[1] in address_parts:
+        pass
+    else:
+        address_parts.append(addy_part[1])
+print(address_parts)
+quit() 
+
+
 offers_df = pd.DataFrame.from_dict(app_fields_data['offers']).assign(offer_item_id = app_item_id_dict['offers'], 
                                                                      offer_created_on = item_created_on_dict['offers'], 
                                                                      offer_last_event_on = item_last_event_on_dict['offers'] )
@@ -237,11 +256,11 @@ file_source_path = 'C:\\Users\\Cameron\\Documents\\Python'
 file_destination_path = 'C:\\Users\\Cameron\\Documents\\Python'
 
 ''' UNCOMMENT TO WRITE DFs to CSVs '''
-# sales_lead_df.to_csv(file_destination_path + '\podio_sales_leads.csv', index = False)
-# offers_df.to_csv(file_destination_path + '\podio_offers.csv', index = False)
-# whiteboard_df.to_csv(file_destination_path + '\podio_whiteboard.csv', index = False)
-# appointment_df.to_csv(file_destination_path + '\podio_appointments.csv', index = False)
-# campaign_df.to_csv(file_destination_path + '\podio_campaigns.csv', index = False)
+sales_lead_df.to_csv(file_destination_path + '\podio_sales_leads.csv', index = False)
+offers_df.to_csv(file_destination_path + '\podio_offers.csv', index = False)
+whiteboard_df.to_csv(file_destination_path + '\podio_whiteboard.csv', index = False)
+appointment_df.to_csv(file_destination_path + '\podio_appointments.csv', index = False)
+campaign_df.to_csv(file_destination_path + '\podio_campaigns.csv', index = False)
 
  
 print(sales_lead_df)
