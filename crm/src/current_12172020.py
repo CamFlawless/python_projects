@@ -3,8 +3,8 @@
 
 client_id = "crmdatagettest"
 client_secret = "I88RXVb9y1Am0AXauUSdOr8Pux9zAwNHDRSLX0UKmI6SbtTI0u4inxGa8i6cwVqi"
-username = "camjcollins@gmail.com"
-password = "Padthai123*"
+username = "**"
+password = "**"
  
 from pypodio2 import api
 import pygsheets 
